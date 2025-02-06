@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#712cf9">
+    <title>Improved NAM-to-Speech Conversion with Multitask-Enhanced Autoregressive Models</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .title-section {
+            background-color: #712cf9;
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        .author-section,
+        .accepted-section {
+            margin-top: 30px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .author-info p {
+            font-size: 1.1rem;
+            margin-bottom: 0;
+        }
+
+        .abstract-section,
+        .proposed-method-section,
+        .table-section {
+            margin: 20px 0;
+        }
+
+        .table-section h3 {
+            margin-bottom: 20px;
+        }
+
+        .figure img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .table {
+            margin: auto;
+            width: 90%;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container-fluid">
+        <!-- Title Section -->
+        <div class="title-section">
+            <h1 class="display-4">
+                Improved NAM-to-Speech Conversion with Multitask-Enhanced Autoregressive Models
+            </h1>
+        </div>
+
+        <!-- Author Section -->
+        <!-- <div class="author-section">
+            <div class="author-info">
+                <p class="lead">
+                    Neil Shah<sup>1,2</sup>, Ayan Kashyap<sup>1</sup>, Shirish Karande<sup>2</sup>, Vineet Gandhi<sup>1</sup>
+                </p>
+                <p><sup>1</sup>International Institute of Information Technology, Hyderabad, India</p>
+                <p><sup>2</sup>TCS Research, Pune, India</p>
+            </div>
+        </div> -->
+
+        <!-- Acceptance Section -->
+        <div class="accepted-section">
+            <h4>Anonymous submission to InterSpeech 2025</h4>
+        </div>
+        <!-- <div class="accepted-section">
+            <h4>Accepted at IEEE ICASSP 2025</h4>
+            <p>International Conference on Acoustics, Speech, and Signal Processing</p>
+            <p>Hyderabad, India</p>
+        </div> -->
+
+        <!-- Abstract Section -->
+        <div class="abstract-section">
+            <h3>Abstract:</h3>
+            <p class="fs-5">
+                We propose an alignment-free, end-to-end Non-Audible Murmur (NAM)-to-Speech conversion model. Unlike conventional two-step methods that first train an acoustic model for NAM-text alignments and then use a non-autoregressive (NAR) model for conversion, our autoregressive (AR) approach directly learns alignments, enabling highly intelligible speech generation. Incorporating synthetically generated training pairs and multitask training for character recognition results in a $59.19$\% reduction in word error rate (WER) compared to the current state-of-the-art (SOTA) method across two public datasets. In addition to evaluating the methods in a speaker-specific context, we demonstrate the zero-shot capability of our model and, through ablation studies, objectively highlight the effectiveness of multitask training for the NAM-to-Speech conversion task.
+            </p>
+        </div>
+
+        <!-- Proposed Method Section -->
+        <div class="row">
+            <h3> Proposed Method</h4>
+        </div>
+        <div class="row p-2"></div>
+        <div class="row">
+            <figure class="figure text-center">
+                <img src="teaser.png" alt="..." class="figure-img" style="max-width: 50%; height: auto; display: block; margin: 0 auto;">
+                <figcaption class="figure-caption text-center">Illustration of the end-to-end NAM-to-Speech conversion framework. The framework comprises: (1) a transformer based NAM-to-unit translation (N2UT) model with a NAM encoder and discrete speech decoder, (2) multitask networks conditioned on both the encoder and decoder, and (3) a vocoder trained to convert the predicted units into speech.</figcaption>
+            </figure>
+        </div>
+
+
+        <!-- Table of Contents -->
+        <div class="table-section">
+            <h3>Table of Contents</h3>
+            <ul>
+                <li><a href="#section1">Comparing samples while training on all data and synthetic NAM data.</a></li>
+                <li><a href="#section2">Comparing samples on StethoText corpus in a zero-shot setting.</a></li>
+            </ul>
+        </div>
+
+        <div class="row">
+            <h3>Comparing samples while training on all data and synthetic NAM data.</h3>
+        </div>
+        <div class="row d-flex ">
+            <table class="table  m-2">
+                <thead>
+                    <tr class="flex-row">
+                        <th class="col-2 text-center">Database</th>
+                        <th class="col-2 text-center">speaker ID</th>
+                        <th class="col-2 text-center">Ground-truth Text</th>
+                        <th class="col-1 text-center">Input NAM</th>
+                        <th class="col-2 text-center">Ours</th> 
+                        <th class="col-2 text-center">StethoSpeech</th>  
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="flex-row">
+                        <td>StethoText</td>
+                        <td>s01_neilnam_IITM_296</td>
+                        <td>then the crane put the fish down and ate it.</td>
+                        <td class="text-center">
+                            <video  width="280" height="280" controls src="samples/nam/s01_neilnam_IITM_296.wav"></video>
+                        </td>
+                        <td class="text-center">
+                            <video  width="280" height="280" controls src="samples/alldata/ours/s01_neilnam_IITM_296.wav"></video>
+                        </td>
+                        <td class="text-center">
+                            <video  width="280" height="280" controls src="samples/alldata/stethospeech/s01_neilnam_IITM_296.wav"></video>
+                        </td>
+                    </tr>
+
+                    <tr class="flex-row">
+                        <td>StethoText</td>
+                        <td>s01_neilnam_IITM_658</td>
+                        <td>a robber must be cruel and have no pity.</td>
+                        <td class="text-center">
+                            <video  width="280" height="280" controls src="samples/nam/s01_neilnam_IITM_658.wav"></video>
+                        </td>
+                        <td class="text-center">
+                            <video  width="280" height="280" controls src="samples/alldata/ours/s01_neilnam_IITM_658.wav"></video>
+                        </td>
+                        <td class="text-center">
+                            <video  width="280" height="280" controls src="samples/alldata/stethospeech/s01_neilnam_IITM_658.wav"></video>
+                        </td>
+                    </tr>
+
+                    <tr class="flex-row">
+                        <td>StethoText</td>
+                        <td>s01_neilnam_IITM_918</td>
+                        <td>otherwise, you will disturb his meditation and bring upon you his wrath.</td>
+                        <td class="text-center">
+                            <video  width="280" height="280" controls src="samples/nam/s01_neilnam_IITM_918.wav"></video>
+                        </td>
+                        <td class="text-center">
+                            <video  width="280" height="280" controls src="samples/alldata/ours/s01_neilnam_IITM_918.wav"></video>
+                        </td>
+                        <td class="text-center">
+                            <video  width="280" height="280" controls src="samples/alldata/stethospeech/s01_neilnam_IITM_918.wav"></video>
+                        </td>
+                    </tr>
+
+                    <tr class="flex-row">
+                        <td>StethoText</td>
+                        <td>s01_neilnam_IITM_1486</td>
+                        <td>at once, the two lion cubs got ready to attack the elephant.</td>
+                        <td class="text-center">
+                            <video  width="280" height="280" controls src="samples/nam/s01_neilnam_IITM_1486.wav"></video>
+                        </td>
+                        <td class="text-center">
+                            <video  width="280" height="280" controls src="samples/alldata/ours/s01_neilnam_IITM_1486.wav"></video>
+                        </td>
+                        <td class="text-center">
+                            <video  width="280" height="280" controls src="samples/alldata/stethospeech/s01_neilnam_IITM_1486.wav"></video>
+                        </td>
+                    </tr>
+
+                    <tr class="flex-row">
+                        <td>StethoText</td>
+                        <td>s01_neilnam_IITM_1874</td>
+                        <td>but he was hungry, so he said, very well, hold tight.</td>
+                        <td class="text-center">
+                            <video  width="280" height="280" controls src="samples/nam/s01_neilnam_IITM_1874.wav"></video>
+                        </td>
+                        <td class="text-center">
+                            <video  width="280" height="280" controls src="samples/alldata/ours/s01_neilnam_IITM_1874.wav"></video>
+                        </td>
+                        <td class="text-center">
+                            <video  width="280" height="280" controls src="samples/alldata/stethospeech/s01_neilnam_IITM_1874.wav"></video>
+                        </td>
+                    </tr>
+
+                    <tr class="flex-row">
+                        <td>MultiNAM</td>
+                        <td>1_9</td>
+                        <td>or in what is purchased with that produce from other nations.</td>
+                        <td class="text-center">
+                            <video  width="280" height="280" controls src="samples/nam/1_9.wav"></video>
+                        </td>
+                        <td class="text-center">
+                            <video  width="280" height="280" controls src="samples/alldata/ours/1_9.wav"></video>
+                        </td>
+                        <td class="text-center">
+                            <video  width="280" height="280" controls src="samples/alldata/stethospeech/1_9.wav"></video>
+                        </td>
+                    </tr>
+
+                    <tr class="flex-row">
+                        <td>MultiNAM</td>
+                        <td>3_31</td>
+                        <td>but if they had all wrought separately and independently.</td>
+                        <td class="text-center">
+                            <video  width="280" height="280" controls src="samples/nam/3_31.wav"></video>
+                        </td>
+                        <td class="text-center">
+                            <video  width="280" height="280" controls src="samples/alldata/ours/3_31.wav"></video>
+                        </td>
+                        <td class="text-center">
+                            <video  width="280" height="280" controls src="samples/alldata/stethospeech/3_31.wav"></video>
+                        </td>
+                    </tr>
+
+                    <tr class="flex-row">
+                        <td>MultiNAM</td>
+                        <td>4_2</td>
+                        <td>is almost always divided among a great number of hands.</td>
+                        <td class="text-center">
+                            <video  width="280" height="280" controls src="samples/nam/4_2.wav"></video>
+                        </td>
+                        <td class="text-center">
+                            <video  width="280" height="280" controls src="samples/alldata/ours/4_2.wav"></video>
+                        </td>
+                        <td class="text-center">
+                            <video  width="280" height="280" controls src="samples/alldata/stethospeech/4_2.wav"></video>
+                        </td>
+                    </tr>
+
+                    <tr class="flex-row">
+                        <td>MultiNAM</td>
+                        <td>42_17</td>
+                        <td>of being a greater than most of his neighbours.</td>
+                        <td class="text-center">
+                            <video  width="280" height="280" controls src="samples/nam/42_17.wav"></video>
+                        </td>
+                        <td class="text-center">
+                            <video  width="280" height="280" controls src="samples/alldata/ours/42_17.wav"></video>
+                        </td>
+                        <td class="text-center">
+                            <video  width="280" height="280" controls src="samples/alldata/stethospeech/42_17.wav"></video>
+                        </td>
+                    </tr>
+
+                    <tr class="flex-row">
+                        <td>MultiNAM</td>
+                        <td>48_14</td>
+                        <td>such taxes, in proportion to what they bring into the public treasury of the state.</td>
+                        <td class="text-center">
+                            <video  width="280" height="280" controls src="samples/nam/48_14.wav"></video>
+                        </td>
+                        <td class="text-center">
+                            <video  width="280" height="280" controls src="samples/alldata/ours/48_14.wav"></video>
+                        </td>
+                        <td class="text-center">
+                            <video  width="280" height="280" controls src="samples/alldata/stethospeech/48_14.wav"></video>
+                        </td>
+                    </tr>
+
+                    <tr class="flex-row">
+                        <td>MultiNAM</td>
+                        <td>52_16</td>
+                        <td>applicable to local and provincial purposes.</td>
+                        <td class="text-center">
+                            <video  width="280" height="280" controls src="samples/nam/52_16.wav"></video>
+                        </td>
+                        <td class="text-center">
+                            <video  width="280" height="280" controls src="samples/alldata/ours/52_16.wav"></video>
+                        </td>
+                        <td class="text-center">
+                            <video  width="280" height="280" controls src="samples/alldata/stethospeech/52_16.wav"></video>
+                        </td>
+                    </tr>
+
+                    <tr class="flex-row">
+                        <td>MultiNAM</td>
+                        <td>s2_8_17</td>
+                        <td>there were nine wards in all on the female side, one of them in the attic.</td>
+                        <td class="text-center">
+                            <video  width="280" height="280" controls src="samples/nam/s2_8_17.wav"></video>
+                        </td>
+                        <td class="text-center">
+                            <video  width="280" height="280" controls src="samples/alldata/ours/s2_8_17.wav"></video>
+                        </td>
+                        <td class="text-center">
+                            <video  width="280" height="280" controls src="samples/alldata/stethospeech/s2_8_17.wav"></video>
+                        </td>
+                    </tr>
+
+                    <tr class="flex-row">
+                        <td>MultiNAM</td>
+                        <td>s2_15_4</td>
+                        <td>and which had the prescription of long usage.</td>
+                        <td class="text-center">
+                            <video  width="280" height="280" controls src="samples/nam/s2_15_4.wav"></video>
+                        </td>
+                        <td class="text-center">
+                            <video  width="280" height="280" controls src="samples/alldata/ours/s2_15_4.wav"></video>
+                        </td>
+                        <td class="text-center">
+                            <video  width="280" height="280" controls src="samples/alldata/stethospeech/s2_15_4.wav"></video>
+                        </td>
+                    </tr>
+
+                    <tr class="flex-row">
+                        <td>MultiNAM</td>
+                        <td>s2_17_26</td>
+                        <td>he was charged with moving something which should not be touched.</td>
+                        <td class="text-center">
+                            <video  width="280" height="280" controls src="samples/nam/s2_17_26.wav"></video>
+                        </td>
+                        <td class="text-center">
+                            <video  width="280" height="280" controls src="samples/alldata/ours/s2_17_26.wav"></video>
+                        </td>
+                        <td class="text-center">
+                            <video  width="280" height="280" controls src="samples/alldata/stethospeech/s2_17_26.wav"></video>
+                        </td>
+                    </tr>
+                </tbody>  
+            </table>
+        </div>
+
+        <div class="row">
+            <h3>Comparing samples on StethoText corpus in a zero-shot setting.</h3>
+        </div>
+        <div class="row d-flex ">
+            <table class="table  m-2">
+                <thead>
+                    <tr class="flex-row">
+                        <th class="col-2 text-center">Ground-truth Text</th>
+                        <th class="col-1 text-center">Input NAM</th>
+                        <th class="col-2 text-center">Ours</th> 
+                        <th class="col-2 text-center">StethoSpeech</th>  
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="flex-row">
+                        <td>How old are you, mother.</td>
+                        <td class="text-center">
+                            <video  width="280" height="280" controls src="samples/nam/s13_017.wav"></video>
+                        </td>
+                        <td class="text-center">
+                            <video  width="280" height="280" controls src="samples/0shot/ours/s13_017.wav"></video>
+                        </td>
+                        <td class="text-center">
+                            <video  width="280" height="280" controls src="samples/0shot/stethospeech/s13_017.wav"></video>
+                        </td>
+                    </tr>
+
+                    <tr class="flex-row">
+                        <td>Let us approach someone holy and knowledgeable.</td>
+                        <td class="text-center">
+                            <video  width="280" height="280" controls src="samples/nam/s13_143.wav"></video>
+                        </td>
+                        <td class="text-center">
+                            <video  width="280" height="280" controls src="samples/0shot/ours/s13_143.wav"></video>
+                        </td>
+                        <td class="text-center">
+                            <video  width="280" height="280" controls src="samples/0shot/stethospeech/s13_143.wav"></video>
+                        </td>
+                    </tr>
+
+                    <tr class="flex-row">
+                        <td>Ask him to give you a kingdom.</td>
+                        <td class="text-center">
+                            <video  width="280" height="280" controls src="samples/nam/s13_179.wav"></video>
+                        </td>
+                        <td class="text-center">
+                            <video  width="280" height="280" controls src="samples/0shot/ours/s13_179.wav"></video>
+                        </td>
+                        <td class="text-center">
+                            <video  width="280" height="280" controls src="samples/0shot/stethospeech/s13_179.wav"></video>
+                        </td>
+                    </tr>
+
+                    <tr class="flex-row">
+                        <td>It was believed that he had become a thief.</td>
+                        <td class="text-center">
+                            <video  width="280" height="280" controls src="samples/nam/s13_269.wav"></video>
+                        </td>
+                        <td class="text-center">
+                            <video  width="280" height="280" controls src="samples/0shot/ours/s13_269.wav"></video>
+                        </td>
+                        <td class="text-center">
+                            <video  width="280" height="280" controls src="samples/0shot/stethospeech/s13_269.wav"></video>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</body>
+</html>
