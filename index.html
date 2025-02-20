@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#712cf9">
-    <title>Improved NAM-to-Speech Conversion with Multitask-Enhanced Autoregressive Models</title>
+    <title>NAM-to-Speech Conversion with Multitask-Enhanced Autoregressive Models</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
 
     <style>
@@ -61,7 +61,7 @@
         <!-- Title Section -->
         <div class="title-section">
             <h1 class="display-4">
-                Improved NAM-to-Speech Conversion with Multitask-Enhanced Autoregressive Models
+                NAM-to-Speech Conversion with Multitask-Enhanced Autoregressive Models
             </h1>
         </div>
 
@@ -90,7 +90,7 @@
         <div class="abstract-section">
             <h3>Abstract:</h3>
             <p class="fs-5">
-                We propose an alignment-free, end-to-end Non-Audible Murmur (NAM)-to-Speech conversion model. Unlike conventional two-step methods that first train an acoustic model for NAM-text alignments and then use a non-autoregressive (NAR) model for conversion, our autoregressive (AR) approach directly learns alignments, enabling highly intelligible speech generation. Incorporating synthetically generated training pairs and multitask training for character recognition results in a $59.19$\% reduction in word error rate (WER) compared to the current state-of-the-art (SOTA) method across two public datasets. In addition to evaluating the methods in a speaker-specific context, we demonstrate the zero-shot capability of our model and, through ablation studies, objectively highlight the effectiveness of multitask training for the NAM-to-Speech conversion task.
+                We propose an alignment-free, end-to-end Non-Audible Murmur (NAM)-to-Speech conversion model. Existing methods rely on large NAM-text pairs per speaker to generate high-quality alignments for training non-autoregressive models. However, alignment quality deteriorates when trained on multi-speaker data, limiting their ability to generalize and effectively utilize the available training data. To address this, we introduce a streamlined autoregressive approach that eliminates the need for explicit alignment learning. By leveraging multi-speaker samples, synthetic training pairs, and multitask character recognition training, our method reduces the word error rate (WER) by 59.19% compared to the state-of-the-art (SOTA) on two public datasets. We demonstrate the model’s zero-shot capability and validate the effectiveness of multitask training through ablation studies.
             </p>
         </div>
 
